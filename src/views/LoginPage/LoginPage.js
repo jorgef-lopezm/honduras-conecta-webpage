@@ -1,18 +1,24 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
+import * as Yup from 'yup';
+import {
+  Button,
+  CssBaseline,
+  TextField,
+  Link,
+  Paper,
+  Box,
+  Grid,
+  Typography,
+  makeStyles
+} from '@material-ui/core';
 import { container, title } from "assets/jss/material-kit-react.js";
 import headerLinksStyle from "assets/jss/material-kit-react/components/headerLinksStyle.js";
 import NavBar from "../../components/NavBar.js";
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-
 import Image from '../../assets/img/holding-hands.jpeg';
+import { Formik } from 'formik';
+
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -99,68 +105,119 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignInSide() {
   const classes = useStyles();
+  const history = useHistory();
 
   return (
     <div>
-    <NavBar /> 
-    <Grid container component="main" className={classes.root}>
-      <CssBaseline />
-      <Grid item xs={false} sm={4} md={7} className={classes.image} />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <div className={classes.paper}>
-          <Typography component="h1" variant="h5">
-            Inicio de Sesión
-          </Typography>
-          <form className={classes.form} noValidate>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Correo Electrónico"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Contraseña"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              className={classes.submit}
+      <NavBar />
+      <Grid container component="main" className={classes.root}>
+        <CssBaseline />
+        <Grid item xs={false} sm={4} md={7} className={classes.image} />
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <div className={classes.paper}>
+            <Typography component="h1" variant="h5">
+              Inicio de Sesión
+            </Typography>
+            <Formik
+              initialValues={{
+                email: '',
+                password: ''
+              }}
+              validationSchema={Yup.object().shape({
+                email: Yup.string()
+                  .email('Debe de ser un correo electrónico válido')
+                  .max(50)
+                  .required('El correo electronico es requerido'),
+                password: Yup.string()
+                  .max(255)
+                  .required('La contraseña es requerida')
+              })}
+              onSubmit={values => {
+                axios
+                  //cambia el path
+                  .post('http://localhost:8082/users/authorize', {
+                    email: values.email,
+                    password: values.password
+                  })
+                  .then(response => {
+                    localStorage.clear();
+                    //verifica el response
+                    localStorage.id = response.data._id;
+                    history.push("/agent/profile");
+                  });
+              }}
             >
-              Iniciar Sesión
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  ¿Olvidaste tu contraseña?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Registrate con nosotros"}
-                </Link>
-              </Grid>
-            </Grid>
-            <Box mt={5}>
-            </Box>
-          </form>
-        </div>
+              {({
+                errors,
+                handleBlur,
+                handleChange,
+                handleSubmit,
+                isSubmitting,
+                touched,
+                values
+              }) => (
+                  <form onSubmit={handleSubmit} className={classes.form} noValidate>
+                    <TextField
+                      error={Boolean(touched.email && errors.email)}
+                      fullWidth
+                      helperText={touched.email && errors.email}
+                      label="Correo Electrónico"
+                      margin="normal"
+                      name="email"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      type="email"
+                      value={values.email}
+                      variant="outlined"
+                      required
+                      id="email"
+                      autoComplete="email"
+                      autoFocus
+                    />
+                    <TextField
+                      error={Boolean(touched.password && errors.password)}
+                      fullWidth
+                      helperText={touched.password && errors.password}
+                      label="Contraseña"
+                      margin="normal"
+                      name="password"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      type="password"
+                      value={values.password}
+                      variant="outlined"
+                    />
+                    <Button
+                      disabled={isSubmitting}
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      className={classes.submit}
+                    >
+                      Iniciar Sesión
+                    </Button>
+                    <Grid container>
+                      <Grid item xs>
+                        <Link href="#" variant="body2">
+                          ¿Olvidaste tu contraseña?
+                        </Link>
+                      </Grid>
+                      <Grid item>
+                        <RouterLink to={"/user/register"} className={classes.link}>
+                          <Link href="#" variant="body2">
+                            {"Registrate con nosotros"}
+                          </Link>
+                        </RouterLink>
+                      </Grid>
+                    </Grid>
+                    <Box mt={5}>
+                    </Box>
+                  </form>
+                )}
+            </Formik>
+          </div>
+        </Grid>
       </Grid>
-    </Grid>
     </div>
-
   );
 }

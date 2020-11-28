@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -13,8 +14,14 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 import Image from '../../assets/img/working-hands.jpeg';
+import Select from '@material-ui/core/Select';
+import axios from 'axios';
+import * as Yup from 'yup';
+import { Formik } from 'formik';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -101,93 +108,166 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignInSide() {
   const classes = useStyles();
+  const history = useHistory();
 
   return (
     <div>
-    <NavBar /> 
-    <Grid container component="main" className={classes.root}>
-      <CssBaseline />
-      <Grid item xs={false} sm={4} md={7} className={classes.image} />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <div className={classes.paper}>
-          <Typography component="h1" variant="h5">
-            Régistro de Agente
-          </Typography>
-          <form className={classes.form} noValidate>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="name"
-              label="Nombre"
-              name="name"
-              autoComplete="name"
-              autoFocus
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Correo Electrónico"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="agent"
-              label="Tipo de Agente"
-              name="agent"
-              autoComplete="text"
-              autoFocus
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Contraseña"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            {/* <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Al registrarse, confirma que está de acuerdo con los terminos y condiciones"
-            /> */}
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Subscribirse al boletín"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              className={classes.submit}
+      <NavBar />
+      <Grid container component="main" className={classes.root}>
+        <CssBaseline />
+        <Grid item xs={false} sm={4} md={7} className={classes.image} />
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <div className={classes.paper}>
+            <Typography component="h1" variant="h5">
+              Régistro de Agente
+            </Typography>
+            <Formik
+              initialValues={{
+                name: '',
+                email: '',
+                password: '',
+                agentType: ''
+              }}
+              validationSchema={Yup.object().shape({
+                name: Yup.string()
+                  .max(50)
+                  .required('El nombre es requerido'),
+                email: Yup.string()
+                  .email('Debe de ser un correo electrónico válido')
+                  .max(50)
+                  .required('El correo electronico es requerido'),
+                password: Yup.string()
+                  .max(255)
+                  .required('La contraseña es requerida'),
+                agentType: Yup.string()
+                  .required('El correo electronico es requerido')
+              })}
+              onSubmit={values => {
+                // AQUI VA EL REQUEST Y EN VALUES ESTAN LOS VALORES
+              }}
             >
-              Registrarse
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                ¿Ya estas registrado?
+              {({
+                errors,
+                handleBlur,
+                handleChange,
+                handleSubmit,
+                isSubmitting,
+                touched,
+                values
+              }) => (
+                  <form onSubmit={handleSubmit} className={classes.form} noValidate>
+                    <TextField
+                      error={Boolean(touched.name && errors.name)}
+                      fullWidth
+                      helperText={touched.name && errors.name}
+                      label="Nombre"
+                      margin="normal"
+                      name="name"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      type="text"
+                      value={values.name}
+                      variant="outlined"
+                      required
+                      id="firstName"
+                      autoComplete="firstName"
+                      autoFocus
+                    />
+                    <TextField
+                      error={Boolean(touched.email && errors.email)}
+                      fullWidth
+                      helperText={touched.email && errors.email}
+                      label="Correo Electrónico"
+                      margin="normal"
+                      name="email"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      type="text"
+                      value={values.email}
+                      variant="outlined"
+                      required
+                      id="email"
+                      autoComplete="email"
+                      autoFocus
+                    />
+                    <TextField
+                      error={Boolean(touched.password && errors.password)}
+                      fullWidth
+                      helperText={touched.password && errors.password}
+                      label="Contraseña"
+                      margin="normal"
+                      name="password"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      type="password"
+                      value={values.password}
+                      variant="outlined"
+                      required
+                      id="password"
+                      autoComplete="current-password"
+                    />
+                    <InputLabel>Tipo de Agente</InputLabel>
+                    <Select
+                      variant="outlined"
+                      margin="normal"
+                      required
+                      fullWidth
+                      name="agentType"
+                      label="Tipo de Agente"
+                      id="agentType"
+                      value={values.agentType}
+                      onChange={handleChange}
+                    >
+                      <MenuItem value={'Empresa'}>Empresa</MenuItem>
+                      <MenuItem value={'Empresa Social'}>Empresa Social</MenuItem>
+                      <MenuItem value={'Startup'}>Startup</MenuItem>
+                      <MenuItem value={'ONGD-Fundación'}>ONGD-Fundación</MenuItem>
+                      <MenuItem value={'ONGD-Asociación de la Sociedad Civil'}>ONGD-Asociación de la Sociedad Civil</MenuItem>
+                      <MenuItem value={'Organismo Internacional'}>Organismo Internacional</MenuItem>
+                      <MenuItem value={'Cooperativa'}>Cooperativa</MenuItem>
+                      <MenuItem value={'Iglesia'}>Iglesia</MenuItem>
+                      <MenuItem value={'Patronato'}>Patronato</MenuItem>
+                      <MenuItem value={'Sindicato'}>Sindicato</MenuItem>
+                      <MenuItem value={'Colegios profesionales'}>Colegios profesionales</MenuItem>
+                      <MenuItem value={'Organización gremial'}>Organización gremial</MenuItem>
+                      <MenuItem value={'Institución educativa'}>Institución educativa</MenuItem>
+                      <MenuItem value={'Municipalidad'}>Municipalidad</MenuItem>
+                      <MenuItem value={'Gobierno central'}>Gobierno central</MenuItem>
+                      <MenuItem value={'Iniciativa Ciudadana'}>Iniciativa Ciudadana</MenuItem>
+                    </Select>
+                    <FormControlLabel
+                      control={<Checkbox value="remember" color="primary" />}
+                      label="Al registrarse, confirma que está de acuerdo con los terminos y condiciones"
+                    />
+                    <FormControlLabel
+                      control={<Checkbox value="remember" color="primary" />}
+                      label="Subscribirse al boletín"
+                    />
+                    <Button
+                      disable={isSubmitting}
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      className={classes.submit}
+                    >
+                      Registrarse
+                    </Button>
+                    <Grid container>
+                      <Grid item xs>
+                        ¿Ya estas registrado?
                 <Link href="#" variant="body2">
-                  {`  Inicia sesión`}
-                </Link>
-              </Grid>
-            </Grid>
-            <Box mt={5}>
-            </Box>
-          </form>
-        </div>
+                          {`  Inicia sesión`}
+                        </Link>
+                      </Grid>
+                    </Grid>
+                    <Box mt={5}>
+                    </Box>
+                  </form>
+                )}
+            </Formik>
+          </div>
+        </Grid>
       </Grid>
-    </Grid>
     </div>
 
   );

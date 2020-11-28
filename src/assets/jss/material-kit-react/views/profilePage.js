@@ -24,7 +24,7 @@ const profilePageStyle = {
   },
   ...imagesStyle,
   main: {
-    background: "#FFFFFF",
+    background: "#A9D9D9",
     position: "relative",
     zIndex: "3"
   },
@@ -56,7 +56,10 @@ const profilePageStyle = {
   navWrapper: {
     margin: "20px auto 50px auto",
     textAlign: "center"
-  }
+  },
+  textColor: {
+    color: "#3C4858"
+  },
 };
 
 export default profilePageStyle;

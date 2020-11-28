@@ -5,13 +5,17 @@ import { Router, Route, Switch } from "react-router-dom";
 
 import "assets/scss/material-kit-react.scss?v=1.9.0";
 
-// pages for this product
+// Pages for "Honduras Conecta"
 import Components from "views/Components/Components.js";
 import RegisterAgentPage from "views/RegisterAgentPage/RegisterAgentPage.js";
 import ProfileAgentPage from "views/ProfileAgentPage/ProfileAgentPage.js";
 import ProfilePage from "views/ProfilePage/ProfilePage.js";
 import LoginPage from "views/LoginPage/LoginPage.js";
+import LoginAgentPage from "views/LoginAgentPage/LoginAgentPage.js";
 import RegisterPage from "views/RegisterPage/RegisterPage.js";
+import EditUserPage from "views/EditUserPage/EditUserPage.js";
+import EditAgentPage from "views/EditAgentPage/EditAgentPage.js";
+
 // import ProfileAgentPage from "views/RegisterPage/ProfileAgentPage.js";
 
 var hist = createBrowserHistory();
@@ -19,12 +23,15 @@ var hist = createBrowserHistory();
 ReactDOM.render(
   <Router history={hist}>
     <Switch>
-      <Route path="/register-page" component={RegisterPage} />
-      <Route path="/profile-page" component={ProfilePage} />
-      <Route path="/profile-agent-page" component={ProfileAgentPage} />
-      <Route path="/register-agent-page" component={RegisterAgentPage} />
-      <Route path="/login-page" component={LoginPage} />
-      <Route path="/" component={Components} />
+      <Route path="/user/register" component={RegisterPage} />
+      <Route path="/user/profile" component={ProfilePage} />
+      <Route path="/user/edit" component={EditUserPage} />
+      <Route path="/login" component={LoginPage} />
+
+      <Route path="/agent/register" component={RegisterAgentPage} />
+      <Route path="/agent/profile" component={ProfileAgentPage} />
+      <Route path="/agent/edit" component={EditAgentPage} />
+      <Route path="/agent/login" component={LoginAgentPage} />
     </Switch>
   </Router>,
   document.getElementById("root")

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import classNames from "classnames";
 import { makeStyles } from "@material-ui/core/styles";
 import Filter1Icon from '@material-ui/icons/Filter1';
@@ -17,11 +17,66 @@ import studio3 from "assets/img/logofooter_HondurasConecta.png";
 import studio4 from "assets/img/holding-hands.jpeg";
 import studio5 from "assets/img/group-of-people.jpeg";
 import styles from "assets/jss/material-kit-react/views/profilePage.js";
+import CreateIcon from '@material-ui/icons/Create';
+import Modal from '@material-ui/core/Modal';
 
 const useStyles = makeStyles(styles);
 
+function rand() {
+  return Math.round(Math.random() * 20) - 10;
+}
+
+function getModalStyle() {
+  const top = 50 + rand();
+  const left = 50 + rand();
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
+
 export default function ProfilePage(props) {
   const classes = useStyles();
+  const [modalStyle] = React.useState(getModalStyle);
+  const [open, setOpen] = React.useState(false);
+
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [generalInfo, setGeneralInfo] = useState("");
+
+  useEffect(() => {
+    // Cambiar eso al path indicado y cambiar los nombres de atributos del obj
+    // axios.get(`http://localhost:8082/users/${localStorage.id}`)
+    //   .then(response => {
+    //     setFirstName(response.data.firstName);
+    //     setLastName(response.data.lastName);
+    //     setCity(response.data.location.city);
+    //     setState(response.data.location.departamento);
+    //     setGeneralInfo(response.data.info);
+    //   });
+  });
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const body = (
+    <div>
+      <h2>Text in a modal</h2>
+      <p>
+        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+      </p>
+    </div>
+  );
+
   const imageClasses = classNames(
     classes.imgRaised,
     classes.imgRoundedCircle,
@@ -30,9 +85,9 @@ export default function ProfilePage(props) {
   const navImageClasses = classNames(classes.imgRounded, classes.imgGallery);
   return (
     <div>
-    <NavBar /> 
-    <Parallax small filter image={require("assets/img/logofooter_HondurasConecta.png")} />
-    <div className={classNames(classes.main, classes.mainRaised)}>
+      <NavBar />
+      <Parallax small filter image={require("assets/img/logofooter_HondurasConecta.png")} />
+      <div className={classNames(classes.main, classes.mainRaised)}>
         <div>
           <div className={classes.container}>
             <GridContainer justify="center">
@@ -42,39 +97,43 @@ export default function ProfilePage(props) {
                     <img src={profile} alt="..." className={imageClasses} />
                   </div>
                   <div className={classes.name}>
-                    <h3 className={classes.title}>Cesia Perdomo</h3>
-                    <h6>San Pedro Sula, Cortés</h6>
+                    <h3 className={classes.title}>{firstName + " " + lastName}</h3>
+                    <h6>{city}, {state}</h6>
                     <Button justIcon link className={classes.margin5}>
-                      <i className={"fab fa-twitter"} />
+                      <i className={"fab fa-twitter " + classes.textColor} />
                     </Button>
                     <Button justIcon link className={classes.margin5}>
-                      <i className={"fab fa-instagram"} />
+                      <i className={"fab fa-instagram " + classes.textColor} />
                     </Button>
                     <Button justIcon link className={classes.margin5}>
-                      <i className={"fab fa-facebook"} />
+                      <i className={"fab fa-facebook " + classes.textColor} />
                     </Button>
                     <Button justIcon link className={classes.margin5}>
-                        <i class="fab fa-linkedin-in"></i>                    
+                      <i className={"fab fa-linkedin-in " + classes.textColor}></i>
                     </Button>
                   </div>
                 </div>
               </GridItem>
             </GridContainer>
             <div className={classes.description}>
-              <p>
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-              incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-              exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-              irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-              officia deserunt mollit anim id est laborum."{" "}
+              <Button justIcon link className={classes.margin5} onClick={handleOpen}>
+                <CreateIcon className={classes.textColor} />
+              </Button>
+              <Modal
+                open={open}
+                onClose={handleClose}
+              >
+                {body}
+              </Modal>
+              <p className={classes.textColor}>
+                {generalInfo}
               </p>
             </div>
             <GridContainer justify="center">
               <GridItem xs={12} sm={12} md={8} className={classes.navWrapper}>
                 <NavPills
                   alignCenter
-                  color="primary"
+                  color="warning"
                   tabs={[
                     {
                       tabButton: "Galeria",
