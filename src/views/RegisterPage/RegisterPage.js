@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link as RouterLink, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import {
@@ -11,7 +11,9 @@ import {
   Box,
   Grid,
   Typography,
-  makeStyles
+  makeStyles,
+  FormControlLabel,
+  Checkbox
 } from '@material-ui/core';
 import NavBar from "../../components/NavBar.js";
 import styles from "assets/jss/material-kit-react/views/registerPage.js";
@@ -36,7 +38,7 @@ export default function SignInSide() {
             </Typography>
             <Formik
               initialValues={{
-                name: '',
+                firstName: '',
                 lastName: '',
                 email: '',
                 password: '',
@@ -70,7 +72,7 @@ export default function SignInSide() {
                     passwordConfirmation: values.confirmPassword
                   })
                   .then(response => {
-                    history.push("/login");
+                    history.push("/user/login");
                   });
               }}
             >
@@ -98,8 +100,7 @@ export default function SignInSide() {
                       variant="outlined"
                       required
                       id="firstName"
-                      autoComplete="firstName"
-                      autoFocus
+                      autoComplete="off"
                     />
                     <TextField
                       error={Boolean(touched.lastName && errors.lastName)}
@@ -115,8 +116,7 @@ export default function SignInSide() {
                       variant="outlined"
                       required
                       id="lastName"
-                      autoComplete="lastName"
-                      autoFocus
+                      autoComplete="off"
                     />
                     <TextField
                       error={Boolean(touched.email && errors.email)}
@@ -132,8 +132,7 @@ export default function SignInSide() {
                       variant="outlined"
                       required
                       id="email"
-                      autoComplete="email"
-                      autoFocus
+                      autoComplete="off"
                     />
                     <TextField
                       error={Boolean(touched.password && errors.password)}
@@ -149,7 +148,7 @@ export default function SignInSide() {
                       variant="outlined"
                       required
                       id="password"
-                      autoComplete="current-password"
+                      autoComplete="off"
                     />
                     <TextField
                       error={Boolean(touched.confirmPassword && errors.confirmPassword)}
@@ -165,7 +164,11 @@ export default function SignInSide() {
                       variant="outlined"
                       required
                       id="confirmPassword"
-                      autoComplete="current-password"
+                      autoComplete="off"
+                    />
+                    <FormControlLabel
+                      control={<Checkbox value="remember" color="primary" />}
+                      label="Al registrarse, confirma que está de acuerdo con los terminos y condiciones"
                     />
                     <Button
                       disabled={isSubmitting}

@@ -1,81 +1,54 @@
 import React, { useState, useEffect } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import classNames from "classnames";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, Link } from "@material-ui/core";
 import Filter1Icon from '@material-ui/icons/Filter1';
 import Filter2Icon from '@material-ui/icons/Filter2';
 import Filter3Icon from '@material-ui/icons/Filter3';
 import Button from "components/CustomButtons/Button.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
-import NavBar from "../../components/NavBar.js";
+import AgentNavBar from "../../components/AgentNavBar.js";
 import NavPills from "components/NavPills/NavPills.js";
 import Parallax from "components/Parallax/Parallax.js";
-import profile from "assets/img/cesia.jpg";
+import profile from "assets/img/profile_img3.png";
 import studio1 from "assets/img/working-hands.jpeg";
 import studio2 from "assets/img/profile_img1.jpg";
 import studio3 from "assets/img/logofooter_HondurasConecta.png";
 import studio4 from "assets/img/holding-hands.jpeg";
 import studio5 from "assets/img/group-of-people.jpeg";
 import styles from "assets/jss/material-kit-react/views/profilePage.js";
-import CreateIcon from '@material-ui/icons/Create';
-import Modal from '@material-ui/core/Modal';
+import axios from 'axios';
 
 const useStyles = makeStyles(styles);
 
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
-
-function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
-
-  return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
-  };
-}
-
 export default function ProfilePage(props) {
   const classes = useStyles();
-  const [modalStyle] = React.useState(getModalStyle);
-  const [open, setOpen] = React.useState(false);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [generalInfo, setGeneralInfo] = useState("");
+  const [facebook, setFacebook] = useState("");
+  const [linkedin, setLinkedin] = useState("");
+  const [twitter, setTwitter] = useState("");
+  const [instagram, setInstagram] = useState("");
 
   useEffect(() => {
-    // Cambiar eso al path indicado y cambiar los nombres de atributos del obj
-    // axios.get(`http://localhost:8082/users/${localStorage.id}`)
-    //   .then(response => {
-    //     setFirstName(response.data.firstName);
-    //     setLastName(response.data.lastName);
-    //     setCity(response.data.location.city);
-    //     setState(response.data.location.departamento);
-    //     setGeneralInfo(response.data.info);
-    //   });
+    axios.get(`http://localhost:8082/agents/${localStorage.id}`)
+      .then(response => {
+        setFirstName(response.data.firstName);
+        setLastName(response.data.lastName);
+        setCity(response.data.location.municipio);
+        setState(response.data.location.departament);
+        setGeneralInfo(response.data.generalInformation);
+        setFacebook(response.data.facebook);
+        setLinkedin(response.data.linkedIn);
+        setTwitter(response.data.twitter);
+        setInstagram(response.data.instagram);
+      });
   });
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const body = (
-    <div>
-      <h2>Text in a modal</h2>
-      <p>
-        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-      </p>
-    </div>
-  );
 
   const imageClasses = classNames(
     classes.imgRaised,
@@ -85,7 +58,7 @@ export default function ProfilePage(props) {
   const navImageClasses = classNames(classes.imgRounded, classes.imgGallery);
   return (
     <div>
-      <NavBar />
+      <AgentNavBar />
       <Parallax small filter image={require("assets/img/logofooter_HondurasConecta.png")} />
       <div className={classNames(classes.main, classes.mainRaised)}>
         <div>
@@ -100,31 +73,41 @@ export default function ProfilePage(props) {
                     <h3 className={classes.title}>{firstName + " " + lastName}</h3>
                     <h6>{city}, {state}</h6>
                     <Button justIcon link className={classes.margin5}>
-                      <i className={"fab fa-twitter " + classes.textColor} />
+                      <RouterLink to={twitter}>
+                        <Link>
+                          <i className={"fab fa-twitter " + classes.textColor} />
+                        </Link>
+                      </RouterLink>
                     </Button>
                     <Button justIcon link className={classes.margin5}>
-                      <i className={"fab fa-instagram " + classes.textColor} />
+                      <RouterLink to={instagram}>
+                        <Link>
+                          <i className={"fab fa-instagram " + classes.textColor} />
+                        </Link>
+                      </RouterLink>
                     </Button>
                     <Button justIcon link className={classes.margin5}>
-                      <i className={"fab fa-facebook " + classes.textColor} />
+                      <RouterLink to={facebook}>
+                        <Link>
+                          <i className={"fab fa-facebook " + classes.textColor} />
+                        </Link>
+                      </RouterLink>
                     </Button>
                     <Button justIcon link className={classes.margin5}>
-                      <i className={"fab fa-linkedin-in " + classes.textColor}></i>
+                      <RouterLink to={linkedin}>
+                        <Link>
+                          <i className={"fab fa-linkedin-in " + classes.textColor}></i>
+                        </Link>
+                      </RouterLink>
                     </Button>
                   </div>
+                  <RouterLink to={"/agent/edit"} className={classes.link}>
+                    <Button variant="outlined">Editar Perfil</Button>
+                  </RouterLink>
                 </div>
               </GridItem>
             </GridContainer>
             <div className={classes.description}>
-              <Button justIcon link className={classes.margin5} onClick={handleOpen}>
-                <CreateIcon className={classes.textColor} />
-              </Button>
-              <Modal
-                open={open}
-                onClose={handleClose}
-              >
-                {body}
-              </Modal>
               <p className={classes.textColor}>
                 {generalInfo}
               </p>
@@ -208,7 +191,6 @@ export default function ProfilePage(props) {
           </div>
         </div>
       </div>
-      {/* Possible Footer here<Footer /> */}
     </div>
   );
 }

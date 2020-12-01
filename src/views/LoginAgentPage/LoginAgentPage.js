@@ -14,10 +14,9 @@ import {
 } from '@material-ui/core';
 import { container, title } from "assets/jss/material-kit-react.js";
 import headerLinksStyle from "assets/jss/material-kit-react/components/headerLinksStyle.js";
-import NavBar from "../../components/NavBar.js";
+import AgentNavBar from "../../components/AgentNavBar.js";
 import Image from '../../assets/img/holding-hands.jpeg';
 import { Formik } from 'formik';
-
 import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
@@ -103,13 +102,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function SignInSide() {
+export default function LoginAgent() {
     const classes = useStyles();
     const history = useHistory();
 
     return (
         <div>
-            <NavBar />
+            <AgentNavBar />
             <Grid container component="main" className={classes.root}>
                 <CssBaseline />
                 <Grid item xs={false} sm={4} md={7} className={classes.image} />
@@ -117,7 +116,7 @@ export default function SignInSide() {
                     <div className={classes.paper}>
                         <Typography component="h1" variant="h5">
                             Inicio de Sesión
-            </Typography>
+                        </Typography>
                         <Formik
                             initialValues={{
                                 email: '',
@@ -134,14 +133,14 @@ export default function SignInSide() {
                             })}
                             onSubmit={values => {
                                 axios
-                                    .post('http://localhost:8082/users/authorize', {
+                                    .post('http://localhost:8082/agents/authorize', {
                                         email: values.email,
                                         password: values.password
                                     })
                                     .then(response => {
                                         localStorage.clear();
                                         localStorage.id = response.data._id;
-                                        history.push("/user/profile");
+                                        history.push("/agent/profile");
                                     });
                             }}
                         >
@@ -193,15 +192,15 @@ export default function SignInSide() {
                                             className={classes.submit}
                                         >
                                             Iniciar Sesión
-                    </Button>
+                                        </Button>
                                         <Grid container>
                                             <Grid item xs>
                                                 <Link href="#" variant="body2">
                                                     ¿Olvidaste tu contraseña?
-                        </Link>
+                                                </Link>
                                             </Grid>
                                             <Grid item>
-                                                <RouterLink to={"/user/register"} className={classes.link}>
+                                                <RouterLink to={"/agent/register"} className={classes.link}>
                                                     <Link href="#" variant="body2">
                                                         {"Registrate con nosotros"}
                                                     </Link>

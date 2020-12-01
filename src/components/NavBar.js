@@ -1,4 +1,5 @@
 import React from "react";
+import { Link as RouterLink } from 'react-router-dom';
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -68,65 +69,66 @@ const useStyles = makeStyles((theme) => ({
 export default function ProfilePage() {
   const classes = useStyles();
   return (
-      <div id="navbar" className={classes.navbar}>
-          <Header
-            brand="Inicio"
-            color="dark"
-            rightLinks={
-              <List className={classes.list}>
-                <ListItem className={classes.listItem}>
-                  <Button
-                    href="#pablo"
-                    className={classes.navLink}
-                    onClick={e => e.preventDefault()}
-                    color="transparent"
-                  >
-                    ¿Quienes Somos?
+    <div id="navbar" className={classes.navbar}>
+      <Header
+        brand="Inicio"
+        color="dark"
+        rightLinks={
+          <List className={classes.list}>
+            <ListItem className={classes.listItem}>
+              <Button
+                href="#pablo"
+                className={classes.navLink}
+                onClick={e => e.preventDefault()}
+                color="transparent"
+              >
+                ¿Quienes Somos?
                   </Button>
-                </ListItem>
-                <ListItem className={classes.listItem}>
-                  <Button
-                    href="#pablo"
-                    className={classes.navLink}
-                    onClick={e => e.preventDefault()}
-                    color="transparent"
-                  >
-                    Iniciativas
+            </ListItem>
+            <ListItem className={classes.listItem}>
+              <Button
+                href="#pablo"
+                className={classes.navLink}
+                onClick={e => e.preventDefault()}
+                color="transparent"
+              >
+                Iniciativas
                   </Button>
-                </ListItem>
-                <ListItem className={classes.listItem}>
-                  <Button
-                    href="#pablo"
-                    className={classes.navLink}
-                    onClick={e => e.preventDefault()}
-                    color="transparent"
-                  >
-                    Blog
+            </ListItem>
+            <ListItem className={classes.listItem}>
+              <Button
+                href="#pablo"
+                className={classes.navLink}
+                onClick={e => e.preventDefault()}
+                color="transparent"
+              >
+                Blog
                   </Button>
-                </ListItem>
-                <ListItem className={classes.listItem}>
-                  <Button
-                    href="#pablo"
-                    className={classes.navLink}
-                    onClick={e => e.preventDefault()}
-                    color="transparent"
-                  >
-                    Contacto
+            </ListItem>
+            <ListItem className={classes.listItem}>
+              <Button
+                href="#pablo"
+                className={classes.navLink}
+                onClick={e => e.preventDefault()}
+                color="transparent"
+              >
+                Contacto
                   </Button>
-                </ListItem>
-                <ListItem className={classes.listItem}>
-                  <Button
-                    href="#pablo"
-                    className={classes.registerNavLink}
-                    onClick={e => e.preventDefault()}
-                    round
-                  >
-                    Iniciar Sesion
-                  </Button>
-                </ListItem>
-              </List>
-            }
-          />
-      </div>
-  ); 
+            </ListItem>
+            <ListItem className={classes.listItem}>
+              <RouterLink to={"/user/login"} className={classes.link}>
+                <Button
+                  className={classes.registerNavLink}
+                  round
+                >
+                  Iniciar Sesion
+                </Button>
+              </RouterLink>
+
+            </ListItem>
+          </List>
+        }
+      />
+    </div>
+  );
 }

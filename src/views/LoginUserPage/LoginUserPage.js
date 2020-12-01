@@ -17,7 +17,6 @@ import headerLinksStyle from "assets/jss/material-kit-react/components/headerLin
 import NavBar from "../../components/NavBar.js";
 import Image from '../../assets/img/holding-hands.jpeg';
 import { Formik } from 'formik';
-
 import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
@@ -103,7 +102,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignInSide() {
+export default function LoginUser() {
   const classes = useStyles();
   const history = useHistory();
 
@@ -134,16 +133,14 @@ export default function SignInSide() {
               })}
               onSubmit={values => {
                 axios
-                  //cambia el path
                   .post('http://localhost:8082/users/authorize', {
                     email: values.email,
                     password: values.password
                   })
                   .then(response => {
                     localStorage.clear();
-                    //verifica el response
                     localStorage.id = response.data._id;
-                    history.push("/agent/profile");
+                    history.push("/user/profile");
                   });
               }}
             >

@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import classNames from "classnames";
-import { makeStyles, Typography, Grid } from "@material-ui/core";
+import { makeStyles, Typography, Button } from "@material-ui/core";
+import {
+  RecentActors as RecentActorsIcon,
+  Build as BuildIcon,
+  Favorite as FavoriteIcon,
+} from '@material-ui/icons';
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
-import NavBar from "../../components/NavBar.js";
+import NavBar from "components/NavBar.js";
 import NavPills from "components/NavPills/NavPills.js";
 import Parallax from "components/Parallax/Parallax.js";
-import profile from "assets/img/cesia.jpg";
-import BuildIcon from '@material-ui/icons/Build';
+import profile from "assets/img/profile_img3.png";
 import styles from "assets/jss/material-kit-react/views/profilePage.js";
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import RecentActorsIcon from '@material-ui/icons/RecentActors';
-import CreateIcon from '@material-ui/icons/Create';
-import Button from "components/CustomButtons/Button.js";
 import axios from 'axios';
 
 const useStyles = makeStyles(styles);
@@ -32,6 +33,8 @@ export default function ProfilePage(props) {
   const [workPlace, setWorkPlace] = useState("");
   const [studiesAt, setStudiesAt] = useState("");
   const [profession, setProfession] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
 
   useEffect(() => {
     axios.get(`http://localhost:8082/users/${localStorage.id}`)
@@ -43,6 +46,8 @@ export default function ProfilePage(props) {
         setWorkPlace(response.data.workplace);
         setStudiesAt(response.data.studiesAt);
         setProfession(response.data.profession);
+        setEmail(response.data.email);
+        setPhone(response.data.phone);
       });
   });
 
@@ -63,12 +68,15 @@ export default function ProfilePage(props) {
                     <h3 className={classes.title}>{firstName + " " + lastName}</h3>
                     <h6>{city}, {state}</h6>
                   </div>
+                  <RouterLink to={"/user/edit"} className={classes.link}>
+                    <Button variant="outlined">Editar Perfil</Button>
+                  </RouterLink>
                 </div>
               </GridItem>
             </GridContainer>
             <div className={classes.description}>
               <Typography className={classes.title}>
-                <CreateIcon className={classes.linkIcon} /> Informacion
+                Informacion
               </Typography>
               <h6 className={classes.textColor}>Trabaja</h6>
               <p className={classes.textColor}>{workPlace}</p>
@@ -105,12 +113,12 @@ export default function ProfilePage(props) {
                       tabContent: (
                         <GridContainer justify="center">
                           <div className={classes.description}>
-                            <h6>Hambre Cero</h6>
-                            <p>Alimentacion</p>
-                            <p>Nutrición</p>
-                            <h6>Salud y Bienestar</h6>
-                            <p>Salud Infantil</p>
-                            <p>Salud Mental</p>
+                            <h6 className={classes.textColor}>Hambre Cero</h6>
+                            <p className={classes.textColor}>Alimentacion</p>
+                            <p className={classes.textColor}>Nutrición</p>
+                            <h6 className={classes.textColor}>Salud y Bienestar</h6>
+                            <p className={classes.textColor}>Salud Infantil</p>
+                            <p className={classes.textColor}>Salud Mental</p>
                           </div>
                         </GridContainer>
                       )
@@ -121,10 +129,10 @@ export default function ProfilePage(props) {
                       tabContent: (
                         <GridContainer justify="center">
                           <div className={classes.description}>
-                            <h6>Correo Electrónico</h6>
-                            <p>cesiaperdomo@hondurasconecta.hn</p>
-                            <h6>Telefono</h6>
-                            <p>(+504) 9580-5899</p>
+                            <h6 className={classes.textColor}>Correo Electrónico</h6>
+                            <p className={classes.textColor}>{email}</p>
+                            <h6 className={classes.textColor}>Telefono</h6>
+                            <p className={classes.textColor}>{phone}</p>
                           </div>
                         </GridContainer>
                       )
